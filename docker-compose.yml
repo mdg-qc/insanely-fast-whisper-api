@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  whisper-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: insanely-fast-whisper-api:latest
+    container_name: whisper-api
+    ports:
+      - "9000:9000"
+    environment:
+      - ADMIN_KEY=${ADMIN_KEY:-}
+      - HF_TOKEN=${HF_TOKEN:-}
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+    volumes:
+      - ./app:/app/app  # Opcjonalnie: dla szybszego developmentu
